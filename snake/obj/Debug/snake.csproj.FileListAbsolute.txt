@@ -8,3 +8,4 @@ C:\Study\computer_graphics\control_work\snake\obj\Debug\snake.csproj.GenerateRes
 C:\Study\computer_graphics\control_work\snake\obj\Debug\snake.csproj.CoreCompileInputs.cache
 C:\Study\computer_graphics\control_work\snake\obj\Debug\snake.exe
 C:\Study\computer_graphics\control_work\snake\obj\Debug\snake.pdb
+C:\Study\computer_graphics\control_work\snake\obj\Debug\snake.MainForm.resources
