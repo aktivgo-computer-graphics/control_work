@@ -29,16 +29,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.startBtn = new System.Windows.Forms.Button();
             this.stopBtn = new System.Windows.Forms.Button();
             this.taskSwitcher = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
-            // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // startBtn
             // 
@@ -82,7 +76,6 @@
             this.Controls.Add(this.taskSwitcher);
             this.Controls.Add(this.stopBtn);
             this.Controls.Add(this.startBtn);
-            this.DoubleBuffered = true;
             this.Name = "MainForm";
             this.Text = "Snake";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -95,8 +88,6 @@
         private System.Windows.Forms.Button stopBtn;
 
         private System.Windows.Forms.Button startBtn;
-
-        private System.Windows.Forms.Timer timer;
 
         #endregion
     }

@@ -16,6 +16,17 @@ namespace snake
         private Graphics Graph;
         private Pen BlackPen;
         private Pen WhitePen;
+        private SolidBrush BlackBrush;
+        private SolidBrush WhiteBrush;
+
+        private Timer timerPoint;
+        
+        private GraphicsPath rectangle;
+        private PointF[] points;
+        private bool toRight = true, toDown = true;
+        private int xPoint, yPoint;
+        private const int BallStep = 5;
+        private const int BallRadius = 50;
 
         private Queue<Point> snake;
         private Point head;
@@ -24,16 +35,26 @@ namespace snake
         {
             InitializeComponent();
             Graph = CreateGraphics();
-            Graph.SmoothingMode = SmoothingMode.HighQuality;
+            Graph.SmoothingMode = SmoothingMode.HighSpeed;
             BlackPen = new Pen(Color.Black, 2);
             WhitePen = new Pen(Color.White, 2);
+            BlackBrush = new SolidBrush(Color.Black);
+            WhiteBrush = new SolidBrush(Color.White);
 
             snake = new Queue<Point>();
+
+            timerPoint = new Timer();
+            timerPoint.Interval = 50;
+            timerPoint.Tick += timerPoint_tick;
+            
+            xPoint = ClientSize.Width / 2;
+            yPoint = ClientSize.Height / 2;
         }
 
         private void startBtn_Click(object sender, EventArgs e)
         {
-            timer.Stop();
+            Graph.Clear(Color.White);
+            timerPoint.Stop();
             
             switch (taskSwitcher.SelectedIndex)
             {
@@ -41,13 +62,59 @@ namespace snake
                     StartSnake();
                     break;
                 case 1:
+                    points = new PointF[4];
+                    points[0] = new PointF(100, 100);
+                    points[1] = new PointF(ClientSize.Width - 100, 100);
+                    points[2] = new PointF(ClientSize.Width - 100, ClientSize.Height - 100);
+                    points[3] = new PointF(100, ClientSize.Height - 100);
+                    rectangle = new GraphicsPath();
+                    rectangle.AddPolygon(points);
+                    PaintBoard();
+
+                    PaintBall();
+                    timerPoint.Start();
                     break;
             }
+        }
+
+        private void PaintBoard()
+        {
+            Graph.DrawPolygon(BlackPen, points);
+        }
+        
+        private void timerPoint_tick(object sender, EventArgs e)
+        {
+            if (rectangle == null) return;
+
+            ClearBall();
+
+            if (toRight) xPoint += BallStep;
+            else xPoint -= BallStep;
+
+            if (toDown) yPoint += BallStep;
+            else yPoint -= BallStep;
+            
+            PaintBall();
+
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint + BallStep + 2 * BallRadius))) toDown = false;
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint - BallStep))) toDown = true;
+            if (!rectangle.IsVisible(new Point(xPoint - BallStep, yPoint))) toRight = true;
+            if (!rectangle.IsVisible(new Point(xPoint + BallStep + 2 * BallRadius, yPoint))) toRight = false;
+        }
+        
+        private void PaintBall()
+        {
+            Graph.FillEllipse(BlackBrush, xPoint, yPoint, 2 * BallRadius, 2 * BallRadius);
+        }
+        
+        private void ClearBall()
+        {
+            Graph.FillEllipse(WhiteBrush, xPoint, yPoint, 2 * BallRadius, 2 * BallRadius);
         }
         
         private void stopBtn_Click(object sender, EventArgs e)
         {
-            timer.Stop();
+            timerPoint.Stop();
         }
 
         private void StartSnake()
@@ -57,8 +124,6 @@ namespace snake
             
             snake = CreateSnake(5);
             PaintSnake(snake);
-            
-            timer.Start();
         }
         
         private List<GraphicsPath> CreateBarriers()
@@ -158,7 +223,10 @@ namespace snake
         {
             Graph.Dispose();
             BlackPen.Dispose();
-            timer.Dispose();
+            WhitePen.Dispose();
+            BlackBrush.Dispose();
+            WhiteBrush.Dispose();
+            timerPoint.Dispose();
         }
     }
 }

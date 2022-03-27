@@ -14,15 +14,15 @@ namespace task11
         
         private GraphicsPath rectangle;
         private PointF[] points;
-        private bool freeX = true, freeY = true;
+        private bool toRight = true, toDown = true;
         private int xPoint, yPoint;
 
-        private int centerY;
         private int countRotates;
         private bool toLeft = true;
 
-        private const float RotateAngle = 20;
-        private const int PointSpeed = 10;
+        private const int PointRadius = 10;
+        private const float RotateAngle = 10;
+        private const int PointSpeed = 45;
         private const int RectangleLength = 400;
         private const int RectangleHeight = 200;
 
@@ -34,8 +34,8 @@ namespace task11
             MyPen = new Pen(Color.Black, 2);
             MyBrush = new SolidBrush(Color.Black);
 
-            InitTimerPoint(50);
-            InitTimerRectangle(300);
+            InitTimerPoint(60);
+            InitTimerRectangle(200);
             InitRectangle();
             InitPoint();
         }
@@ -59,7 +59,6 @@ namespace task11
         private void InitRectangle()
         {
             countRotates = 0;
-            centerY = ClientSize.Height / 2;
             points = new PointF[4];
             points[0] = new PointF(ClientSize.Width / 2 - RectangleLength / 2, ClientSize.Height / 2);
             points[1] = new PointF(ClientSize.Width / 2 + RectangleLength / 2, ClientSize.Height / 2);
@@ -136,18 +135,18 @@ namespace task11
         {
             if (rectangle == null) return;
 
-            if (freeX) xPoint += PointSpeed;
+            if (toRight) xPoint += PointSpeed;
             else xPoint -= PointSpeed;
 
-            if (freeY) yPoint += PointSpeed;
+            if (toDown) yPoint += PointSpeed;
             else yPoint -= PointSpeed;
             
             UpdateScreen();
 
-            if (!rectangle.IsVisible(new Point(xPoint, yPoint + PointSpeed + centerY / 10 + 10))) freeY = false;
-            if (!rectangle.IsVisible(new Point(xPoint, yPoint - PointSpeed - 10))) freeY = true;
-            if (!rectangle.IsVisible(new Point(xPoint - PointSpeed - 10, yPoint))) freeX = true;
-            if (!rectangle.IsVisible(new Point(xPoint + PointSpeed + centerY / 10 + 10, yPoint))) freeX = false;
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint + PointSpeed + 2 * PointRadius))) toDown = false;
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint - PointSpeed))) toDown = true;
+            if (!rectangle.IsVisible(new Point(xPoint - PointSpeed, yPoint))) toRight = true;
+            if (!rectangle.IsVisible(new Point(xPoint + PointSpeed + 2 * PointRadius, yPoint))) toRight = false;
         }
         
         private void PaintRectangle()
@@ -157,7 +156,7 @@ namespace task11
         
         private void PaintPoint()
         {
-            Graph.FillEllipse(MyBrush, xPoint, yPoint, 20, 20);
+            Graph.FillEllipse(MyBrush, xPoint, yPoint, 2 * PointRadius, 2 * PointRadius);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
