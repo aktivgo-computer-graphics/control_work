@@ -30,10 +30,19 @@ namespace snake
 
             snake = new Queue<Point>();
         }
-        
+
         private void startBtn_Click(object sender, EventArgs e)
         {
-            StartSnake();
+            timer.Stop();
+            
+            switch (taskSwitcher.SelectedIndex)
+            {
+                case 0:
+                    StartSnake();
+                    break;
+                case 1:
+                    break;
+            }
         }
         
         private void stopBtn_Click(object sender, EventArgs e)

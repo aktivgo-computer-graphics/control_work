@@ -1,0 +1,11 @@
+D:\Study\term_6\computer_graphics\control_work\task11\bin\Release\task11.exe.config
+D:\Study\term_6\computer_graphics\control_work\task11\bin\Release\task11.exe
+D:\Study\term_6\computer_graphics\control_work\task11\bin\Release\task11.pdb
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.csproj.AssemblyReference.cache
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.csproj.SuggestedBindingRedirects.cache
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.Properties.Resources.resources
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.csproj.GenerateResource.cache
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.csproj.CoreCompileInputs.cache
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.exe
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.pdb
+D:\Study\term_6\computer_graphics\control_work\task11\obj\Release\task11.MainForm.resources

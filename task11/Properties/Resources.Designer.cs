@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace snake.Properties
+namespace task11.Properties
 {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -45,7 +45,7 @@ namespace snake.Properties
                 if ((resourceMan == null))
                 {
                     global::System.Resources.ResourceManager temp =
-                        new global::System.Resources.ResourceManager("snake.Properties.Resources",
+                        new global::System.Resources.ResourceManager("task11.Properties.Resources",
                             typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
