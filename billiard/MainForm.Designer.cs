@@ -1,4 +1,4 @@
-﻿namespace task11
+﻿namespace billiard
 {
     partial class MainForm
     {
@@ -39,7 +39,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.DoubleBuffered = true;
             this.Name = "MainForm";
-            this.Text = "Задание 11";
+            this.Text = "Billiard";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);

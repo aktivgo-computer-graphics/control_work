@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tasks", "tasks\tasks.csproj", "{038858EC-AEE3-42A1-AA98-7612BF7D90D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "billiard", "billiard\billiard.csproj", "{038858EC-AEE3-42A1-AA98-7612BF7D90D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task11", "task11\task11.csproj", "{6C7D91B6-2BDC-450C-A3C6-19A0609C43E4}"
 EndProject

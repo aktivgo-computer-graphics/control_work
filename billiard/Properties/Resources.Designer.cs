@@ -45,7 +45,7 @@ namespace snake.Properties
                 if ((resourceMan == null))
                 {
                     global::System.Resources.ResourceManager temp =
-                        new global::System.Resources.ResourceManager("tasks.Properties.Resources",
+                        new global::System.Resources.ResourceManager("billiard.Properties.Resources",
                             typeof(Resources).Assembly);
                     resourceMan = temp;
                 }

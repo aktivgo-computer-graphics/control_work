@@ -10,21 +10,23 @@ namespace task11
         private readonly Graphics Graph;
         private readonly Pen MyPen;
         private readonly SolidBrush MyBrush;
-        private Timer timerRectangle, timerPoint;
+        private Timer timer;
         
-        private GraphicsPath rectangle;
-        private PointF[] points;
-        private bool toRight = true, toDown = true;
-        private int xPoint, yPoint;
+        private GraphicsPath rectangle; // Прямоугольник
+        private PointF[] points;        // Буффер для создания прямоугольника
+        
+        private int xPoint, yPoint;                     // Координаты точки
+        private bool pToRight = true, pToDown = true;   // Флаги направления движения точки
 
-        private int countRotates;
-        private bool toLeft = true;
+        private int countRotates;   // Количество вращений прямоугольника
+        private bool toLeft = true; // Направление движения прямоугольника
 
-        private const int PointRadius = 10;
-        private const float RotateAngle = 10;
-        private const int PointSpeed = 45;
-        private const int RectangleLength = 400;
-        private const int RectangleHeight = 200;
+        private const int PRadius = 10;                 // Радиус точки
+        private const int PStep = 8;                    // Шаг движения точки
+        private const float RRotateAngle = 1;           // Угол вращения прямоугольника за один тик
+        private const int RLength = 400, RHeight = 200; // Размеры прямоугольника
+        
+        private const int Fps = 144;   // Количество кадров в секунду
 
         public MainForm()
         {
@@ -34,84 +36,70 @@ namespace task11
             MyPen = new Pen(Color.Black, 2);
             MyBrush = new SolidBrush(Color.Black);
 
-            InitTimerPoint(60);
-            InitTimerRectangle(200);
-            InitRectangle();
-            InitPoint();
+            InitTimer(1000 / Fps);
+            CreateRectangle();
+            CreatePoint();
         }
 
-        private void InitTimerPoint(int interval)
+        private void InitTimer(int interval)
         {
-            timerPoint = new Timer();
-            timerPoint.Interval = interval;
-            timerPoint.Enabled = true;
-            timerPoint.Tick += timerPoint_tick;
-        }
-        
-        private void InitTimerRectangle(int interval)
-        {
-            timerRectangle = new Timer();
-            timerRectangle.Interval = interval;
-            timerRectangle.Enabled = true;
-            timerRectangle.Tick += timerRectangle_tick;
+            timer = new Timer();
+            timer.Interval = interval;
+            timer.Enabled = true;
+            timer.Tick += timer_tick;
         }
 
-        private void InitRectangle()
+        private void CreateRectangle()
         {
             countRotates = 0;
             points = new PointF[4];
-            points[0] = new PointF(ClientSize.Width / 2 - RectangleLength / 2, ClientSize.Height / 2);
-            points[1] = new PointF(ClientSize.Width / 2 + RectangleLength / 2, ClientSize.Height / 2);
-            points[2] = new PointF(ClientSize.Width / 2 + RectangleLength / 2, ClientSize.Height / 2 + RectangleHeight);
-            points[3] = new PointF(ClientSize.Width / 2 - RectangleLength / 2, ClientSize.Height / 2 + RectangleHeight);
+            points[0] = new PointF(ClientSize.Width / 2 - RLength / 2, ClientSize.Height / 2);
+            points[1] = new PointF(ClientSize.Width / 2 + RLength / 2, ClientSize.Height / 2);
+            points[2] = new PointF(ClientSize.Width / 2 + RLength / 2, ClientSize.Height / 2 + RHeight);
+            points[3] = new PointF(ClientSize.Width / 2 - RLength / 2, ClientSize.Height / 2 + RHeight);
         }
 
-        private void InitPoint()
+        private void CreatePoint()
         {
             xPoint = ClientSize.Width / 2;
-            yPoint = ClientSize.Height / 2 + RectangleHeight / 2;
+            yPoint = ClientSize.Height / 2 + RHeight / 2;
+        }
+        
+        /// <summary>
+        /// Каждый тик перерисовывает окно
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timer_tick(object sender, EventArgs e)
+        {
+            Invalidate();
+        }
+        
+        private void MainForm_Paint(object sender, PaintEventArgs e)
+        {
+            MoveRectangle();
+            MovePoint();
+            e.Graphics.DrawPolygon(MyPen, points);
+            e.Graphics.FillEllipse(MyBrush, xPoint, yPoint, 2 * PRadius, 2 * PRadius);
         }
 
-        private void timerRectangle_tick(object sender, EventArgs e)
+        /// <summary>
+        /// Считает новые координаты прямоугольника
+        /// </summary>
+        private void MoveRectangle()
         {
-            if (countRotates == (int)(360 / RotateAngle))
+            // Если прямоугольник сделал полный круг
+            if (countRotates == (int)(360 / RRotateAngle))
             {
+                // Сдвигаем прямоугольник
                 OffsetX();
+                MakeSound();
+                // Обнуляем счеткик поворотов
                 countRotates = 0;
             }
-
-            UpdateScreen();
-            Rotate();
-            countRotates++;
-        }
-
-        private void OffsetX()
-        {
-            if (toLeft && points[3].X - 50 < 0)
-            {
-                toLeft = false;
-            }
-
-            if (!toLeft && points[0].X + 50 > ClientSize.Width)
-            {
-                toLeft = true;
-            }
-                
-            for (var i = 0; i < points.Length; i++)
-            {
-                
-                var curX = toLeft ? points[i].X - 50 :  points[i].X + 50;
-                var curY = points[i].Y;
-                points[i] = new PointF(curX, curY);
-            }
-
-            rectangle = new GraphicsPath();
-            rectangle.AddPolygon(points);
-        }
-
-        private void Rotate()
-        {
-            const double angleRadian = RotateAngle * Math.PI / 180;
+            
+            // Считаем новые координаты прямоугольника с учетом поворота относительно правой верхней вершины
+            const double angleRadian = RRotateAngle * Math.PI / 180;
             var pointRotate = points[1];
             for (var i = 0; i < points.Length; i++)
             {
@@ -119,52 +107,76 @@ namespace task11
                 var curY = (float)((points[i].X - pointRotate.X) * Math.Sin(angleRadian) + (points[i].Y - pointRotate.Y) * Math.Cos(angleRadian) + pointRotate.Y);
                 points[i] = new PointF(curX, curY);
             }
+            rectangle = new GraphicsPath();
+            rectangle.AddPolygon(points);
+            
+            // Инкрементируем счетчик поворотов
+            countRotates++;
+        }
+        
+        /// <summary>
+        /// Сдвигает прямоугольник относительно оси X
+        /// </summary>
+        private void OffsetX()
+        {
+            // Если прямоугольник движется влево, а при слудующем шаге левая вершина выйдет за пределы экрана,
+            // то меняем напрвление
+            if (toLeft && points[3].X - 50 < 0)
+            {
+                toLeft = false;
+            }
 
+            // Если прямоугольник движется вправо, а при слудующем шаге правая вершина выйдет за пределы экрана,
+            // то меняем напрвление
+            if (!toLeft && points[0].X + 50 > ClientSize.Width)
+            {
+                toLeft = true;
+            }
+                
+            // Считаем новые координаты прямоугольник с учетом шага
+            for (var i = 0; i < points.Length; i++)
+            {
+                var curX = toLeft ? points[i].X - 50 :  points[i].X + 50;
+                var curY = points[i].Y;
+                points[i] = new PointF(curX, curY);
+            }
             rectangle = new GraphicsPath();
             rectangle.AddPolygon(points);
         }
-
-        private void UpdateScreen()
-        {
-            Graph.Clear(Color.White);
-            PaintRectangle();
-            PaintPoint();
-        }
         
-        private void timerPoint_tick(object sender, EventArgs e)
+        private void MakeSound()
+        {
+            System.Media.SystemSounds.Exclamation.Play();
+        }
+
+        /// <summary>
+        /// Считает новые координаты точки
+        /// </summary>
+        private void MovePoint()
         {
             if (rectangle == null) return;
 
-            if (toRight) xPoint += PointSpeed;
-            else xPoint -= PointSpeed;
+            // Если можем двигаться направо, то движемся направо, иначе - налево
+            if (pToRight) xPoint += PStep;
+            else xPoint -= PStep;
 
-            if (toDown) yPoint += PointSpeed;
-            else yPoint -= PointSpeed;
-            
-            UpdateScreen();
+            // Если можем двигаться вниз, то движемся вниз, иначе - вверх
+            if (pToDown) yPoint += PStep;
+            else yPoint -= PStep;
 
-            if (!rectangle.IsVisible(new Point(xPoint, yPoint + PointSpeed + 2 * PointRadius))) toDown = false;
-            if (!rectangle.IsVisible(new Point(xPoint, yPoint - PointSpeed))) toDown = true;
-            if (!rectangle.IsVisible(new Point(xPoint - PointSpeed, yPoint))) toRight = true;
-            if (!rectangle.IsVisible(new Point(xPoint + PointSpeed + 2 * PointRadius, yPoint))) toRight = false;
-        }
-        
-        private void PaintRectangle()
-        {
-            Graph.DrawPolygon(MyPen, points);
-        }
-        
-        private void PaintPoint()
-        {
-            Graph.FillEllipse(MyBrush, xPoint, yPoint, 2 * PointRadius, 2 * PointRadius);
+            // В зависимости от пересечения прямоугольника на следующем шаге меняем направление точки
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint + PStep + 2 * PRadius))) pToDown = false;
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint - PStep))) pToDown = true;
+            if (!rectangle.IsVisible(new Point(xPoint - PStep, yPoint))) pToRight = true;
+            if (!rectangle.IsVisible(new Point(xPoint + PStep + 2 * PRadius, yPoint))) pToRight = false;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Graph.Dispose();
             MyPen.Dispose();
-            timerRectangle.Dispose();
-            timerPoint.Dispose();
+            MyBrush.Dispose();
+            timer.Dispose();
         }
     }
 }
