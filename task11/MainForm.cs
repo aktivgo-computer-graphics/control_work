@@ -24,7 +24,7 @@ namespace task11
         private const int PRadius = 10;                 // Радиус точки
         private const int PStep = 8;                    // Шаг движения точки
         private const float RRotateAngle = 1;           // Угол вращения прямоугольника за один тик
-        private const int RLength = 400, RHeight = 200; // Размеры прямоугольника
+        private int RLength = 400, RHeight = 200; // Размеры прямоугольника
         
         private const int Fps = 144;   // Количество кадров в секунду
 
@@ -35,6 +35,9 @@ namespace task11
             Graph.SmoothingMode = SmoothingMode.HighQuality;
             MyPen = new Pen(Color.Black, 2);
             MyBrush = new SolidBrush(Color.Black);
+
+            RLength = ClientSize.Width / 5;
+            RHeight = ClientSize.Height / 5;
 
             InitTimer(1000 / Fps);
             CreateRectangle();
