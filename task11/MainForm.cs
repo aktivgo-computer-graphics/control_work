@@ -36,8 +36,8 @@ namespace task11
             MyPen = new Pen(Color.Black, 2);
             MyBrush = new SolidBrush(Color.Black);
 
-            RLength = ClientSize.Width / 5;
-            RHeight = ClientSize.Height / 5;
+            RLength = ClientSize.Width / 5 + 50;
+            RHeight = ClientSize.Height / 5 + 50;
 
             InitTimer(1000 / Fps);
             CreateRectangle();

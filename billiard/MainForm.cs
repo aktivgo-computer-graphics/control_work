@@ -97,77 +97,19 @@ namespace billiard
             else yPoint -= BallStep;
 
             // В зависимости от пересечения прямоугольника на следующем шаге меняем направление шара
-            if (!rectangle.IsVisible(new Point(xPoint, yPoint + BallStep + 2 * BallRadius)))
-            {
-                MakeSound();
-                toDown = false;
-            }
-
-            if (!rectangle.IsVisible(new Point(xPoint, yPoint - BallStep)))
-            {
-                MakeSound();
-                toDown = true;
-            }
-
-            if (!rectangle.IsVisible(new Point(xPoint - BallStep, yPoint)))
-            {
-                MakeSound();
-                toRight = true;
-            }
-
-            if (!rectangle.IsVisible(new Point(xPoint + BallStep + 2 * BallRadius, yPoint)))
-            {
-                MakeSound();
-                toRight = false;
-            }
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint + BallStep + 2 * BallRadius))) toDown = false;
+            if (!rectangle.IsVisible(new Point(xPoint, yPoint - BallStep))) toDown = true;
+            if (!rectangle.IsVisible(new Point(xPoint - BallStep, yPoint))) toRight = true;
+            if (!rectangle.IsVisible(new Point(xPoint + BallStep + 2 * BallRadius, yPoint)))  toRight = false;
+            
+            MakeSound();
         }
 
-        private void MakeSound()
+        private static void MakeSound()
         {
             System.Media.SystemSounds.Exclamation.Play();
         }
 
-        private List<GraphicsPath> CreateBarriers()
-        {
-            var barriers = new List<GraphicsPath>();
-            
-            var barrier = new List<Point>
-            {
-                new(100, 100),
-                new(300, 100),
-                new(300, 300),
-                new(100, 300)
-            };
-            var path = new GraphicsPath();
-            path.AddLines(barrier.ToArray());
-            path.CloseAllFigures();
-            barriers.Add(path);
-            
-            barrier = new List<Point>
-            {
-                new(500, 300),
-                new(700, 300),
-                new(700, 700),
-                new(600, 700),
-                new(600, 500),
-                new(500, 500),
-            };
-            path = new GraphicsPath();
-            path.AddLines(barrier.ToArray());
-            path.CloseAllFigures();
-            barriers.Add(path);
-
-            return barriers;
-        }
-
-        private void PaintBarriers(List<GraphicsPath> barriers)
-        {
-            foreach (var barrier in barriers)
-            {
-                Graph.DrawPath(MyPen, barrier);
-            }
-        }
-        
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Graph.Dispose();
